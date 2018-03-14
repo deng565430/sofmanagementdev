@@ -1,0 +1,71 @@
+
+.home-page{
+  line-height: 30px;
+  padding: 5px;
+}
+.home-page p{
+  margin: 0;
+  padding: 0;
+}
+.home-page .home-page-top{
+  margin-bottom: 5px;
+  background: #fff;
+  padding-left: 10px;
+}
+.item-height{
+  line-height: 1.8;
+}
+
+.home-page .home-page-right{
+  margin-bottom: 5px;
+  background: #fff;
+  padding-left: 10px;
+  margin-left: 5px;
+}
+
+.ant-checkbox-group{
+  line-height: 2.5
+}
+.xianxia {
+  background: #fff;
+  padding-left: 10px;
+}
+.radio-style{
+  line-height: 1;
+}
+.radio-style .radio-style-lable {
+  border-radius: none; 
+}
+.xianxia > p{
+  background-color: #f8f8f8;
+}
+.xianxia div div{
+  border-bottom: 1px solid #cdcfce;
+  display: flex
+}
+.xianxia div div p{
+  width: 38px;
+  border-bottom: none;
+  border-right: 1px solid #cdcfce;
+}
+.xianxia div div span{
+  padding-left: 10px;
+}
+
+.user-info-msg {
+  border: 1px solid #ccc;
+  padding: 10px 10px;
+  margin: 10px 0;
+}
+.user-info-msg p{
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow: hidden;
+}
+.font-color {
+  color: rgb(53, 53, 53);
+  font-weight: 500;
+}
+.font-size {
+  font-size: 13px
+}

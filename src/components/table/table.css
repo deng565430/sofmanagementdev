@@ -1,0 +1,28 @@
+.background-name{
+  background: #74e0ee;
+}
+.color-name {
+  color: rgb(236, 30, 22);
+}
+.color-name a{
+  color: rgb(236, 30, 22);
+}
+
+.columns-row {
+  display: block;
+  width: 100%;
+  height: 100%;
+  line-height: 2;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ant-table {
+  line-height: 2;
+}
+.ant-table td{
+  padding: 0 !important;
+}
+.ant-table-thead th {
+  padding: 8px 8px !important;
+}

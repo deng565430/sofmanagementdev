@@ -1,0 +1,20 @@
+:root {
+  --background-color: #ccc;
+}
+.dashboard{
+  background-color: var(--background-color);
+}
+#components-layout-demo-top {
+  height: 44px;
+  display: flex
+}
+#components-layout-demo-top .logo {
+  float: left;
+  color: white;
+  line-height: 44px;
+  font-size: 20px
+}
+#components-layout-demo-top .left-menu {
+  font-size: 15px;
+  padding-left: 20px;
+}
