@@ -94,7 +94,7 @@ class Home extends React.Component {
     // 每日拨打详情
     getContactCount: {},
     // 选择评分等级
-    score: ''
+    score: ""
   };
 
   componentDidMount() {
@@ -138,7 +138,10 @@ class Home extends React.Component {
       phone: data,
       sign: null
     };
-    this.props.getTable(dataList);
+    this.props.getTable(dataList, true);
+  }
+  closeSearch(){
+    this.props.getTable(null, false, true)
   }
   // 筛选条件
   selectHandleChange(value) {
@@ -173,6 +176,7 @@ class Home extends React.Component {
     for (let i = 0; i < v.length; i++) {
       practiceStatuses.filter(val => val.value === v[i] && data.push(val.id));
     }
+    this.props.updata(data, "selectPractice");
     this.setState({
       selectPractice: data,
       checkOptionsDefaultValue: v
@@ -225,7 +229,6 @@ class Home extends React.Component {
   onConfirm(e) {
     const phone = this.props.selectUserPhone;
     const openid = this.props.clientInfo.openid;
-    console.log(this.props);
     setmanager({ phone, openid }).then(res => {
       if (res.data.code === 0) {
         success("成功！");
@@ -239,25 +242,23 @@ class Home extends React.Component {
   // 选择评分等级
   checkedScore(e) {
     if (e.target.checked) {
-      this.props.updata(e.target.value, 'checkedScore')
+      this.props.updata(e.target.value, "checkedScore");
       this.setState({
         score: e.target.value
-      })
+      });
     }
   }
 
   // 提交添加更改信息
   addContact() {
-    if (!this.props.selectUserPhone) {
-      return;
-    }
     const phone = this.props.selectUserPhone;
     const score = this.props.clientInfo.checkedScore;
+    const userTags = this.props.clientInfo.labels;
+    const selectPractice = this.props.clientInfo.selectPractice;
     const status = this.state.validContact ? 1 : 0;
+
     const {
       msg,
-      selectPractice,
-      userTags,
       nameRemark,
       phoneRemark
     } = this.state;
@@ -267,9 +268,11 @@ class Home extends React.Component {
         return;
       }
     }
-    setScore({phone, score}).then(res => {
-      console.log(res)
-    })
+    if (score) {
+      setScore({ phone, score }).then(res => {
+        console.log(res);
+      });
+    }
     const data = {
       status,
       phone,
@@ -294,7 +297,12 @@ class Home extends React.Component {
         phoneRemark: phoneRemark[0] || ""
       }
     };
-    modifyClientinfo(modifyData);
+    modifyClientinfo(modifyData).then(res => {
+      if (res.data.code === 0) {
+      } else {
+        error(res.data.msg);
+      }
+    })
     this.setState({
       msg: "",
       nameRemark: [],
@@ -391,7 +399,10 @@ class Home extends React.Component {
                   联系手机:
                 </Col>
                 <Col span={12}>
-                  <SearchInput searchPhone={this.searchPhone.bind(this)} />
+                  <SearchInput
+                    closeSearch={this.closeSearch.bind(this)}
+                    searchPhone={this.searchPhone.bind(this)}
+                  />
                 </Col>
                 <Col span={1} className="font-color" />
                 <Col span={5} className="font-color">
@@ -622,12 +633,18 @@ class Home extends React.Component {
                 </Col>
                 <Col span={8}>
                   <Row style={{ paddingTop: 10 }}>
-                    <Col span={14}>
-                      <span className="font-color">身份：</span>
-                      <span>{clientInfo.store}</span>
-                    </Col>
-                    {clientInfo.store === "店员" ? (
-                      <Col span={6}>
+                    <Col span={24}>
+                      <span className="font-color">身份: </span>
+                      <span className="font-size">{clientInfo.store}</span>
+                      <span style={{ paddingLeft: "5px" }} />
+                      {clientInfo.store === "店长" ? (
+                        <span className="font-size" style={{ color: "#ccc" }}>
+                          ({clientInfo.managerTime})
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                      {clientInfo.store === "店员" ? (
                         <Popconfirm
                           onConfirm={e => this.onConfirm(e)}
                           title="确认升为店长? "
@@ -636,13 +653,13 @@ class Home extends React.Component {
                         >
                           <Button size="small">提升</Button>
                         </Popconfirm>
-                      </Col>
-                    ) : (
-                      ""
-                    )}
+                      ) : (
+                        ""
+                      )}
+                    </Col>
                   </Row>
                   <div style={{ paddingTop: 10 }}>
-                    <span className="font-color">评分：</span>
+                    <span className="font-color">评分: </span>
                     <RadioGroup
                       className="radio-style"
                       value={clientInfo.checkedScore}
@@ -655,7 +672,7 @@ class Home extends React.Component {
                               <Tooltip
                                 key={v.key}
                                 placement="topLeft"
-                                title=""
+                                title={v.msg}
                               >
                                 <RadioButton
                                   className="radio-style-lable"

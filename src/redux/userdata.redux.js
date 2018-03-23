@@ -22,6 +22,8 @@ const initState = {
   contactList: []
 }
 
+let historyData = {}
+
 export function userdata(state = initState, action) {
   switch (action.type) {
     case GETTABLEDATA:
@@ -108,18 +110,25 @@ export function updata(data, msg) {
 }
 
 // 获取table 列表数据
-export function getTable(data) {
+export function getTable(data, isSearch, flag) {
   message.destroy()
   message.loading('加载中', 0)
-  data = Object.assign({}, {
-    phone: null,
-    label: null,
-    day: '7',
-    order: 0,
-    start: 0,
-    length: 20,
-    sign: 'all'
-  }, { ...data })
+  if (flag) {
+    data = historyData
+  } else {
+    data = Object.assign({}, {
+      phone: null,
+      label: null,
+      day: '7',
+      order: historyData.order || 0,
+      start: 0,
+      length: 20,
+      sign: 'all'
+    }, { ...data })
+    if (!isSearch) {
+      historyData = data
+    }
+  }
   const urlPath = (data && data.sign) ? data.sign : 'all'
   const page = (data && data.start) ? data.start + 1 : 1
   return dispatch => {
