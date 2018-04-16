@@ -11,7 +11,7 @@ export default class Tables extends React.Component {
     value: ''
   }
   searchPhone(value) {
-    if (/^1[3|4|5|7|8]\d{9}$/.test(trims(value))) {
+    if (/^1[3|4|5|6|7|8|9]\d{9}$/.test(trims(value))) {
       this.props.searchPhone(trims(value))
     } else {
       error('请重新输入电话号码')
@@ -20,7 +20,7 @@ export default class Tables extends React.Component {
   clearValue() {
     if (trims(this.state.value) === '') return;
     this.setState({value: ''})
-    if (!/^1[3|4|5|7|8]\d{9}$/.test(trims(this.state.value))) return;
+    if (!/^1[3|4|5|6|7|8|9]\d{9}$/.test(trims(this.state.value))) return;
     this.props.closeSearch()
   }
   render() {
