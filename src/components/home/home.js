@@ -357,7 +357,7 @@ class Home extends React.Component {
       <div className="home-page">
         <Row className="home-page-top">
           {this.state.getContactCount.dataTime != null ? (
-            <Row>
+            <Row style={{ borderBottom: '1px dashed #ccc' }}>
               <Col span={1} />
               <Col span={243}>
                 {this.state.getContactCount.dataTime} 更新：昨日已联系<span
@@ -393,7 +393,7 @@ class Home extends React.Component {
             </Row>
             <Row>
               <Col>
-                <div style={{ paddingTop: 10, paddingBottom: 10, width: 350, position: 'absolute', top: -50, left: 580 }}>
+                <div style={{ paddingTop: 10, paddingBottom: 10, width: 350, position: 'absolute', top: -39, left: 580 }}>
                   <Col span={6} className="font-color">
                     客户分级：
                   </Col>
@@ -451,7 +451,7 @@ class Home extends React.Component {
                     <Radio value={'all'}>全部</Radio>
                   </RadioGroup>
                 </Col>
-                <Col span={2} style={{ position: 'absolute', top: -20, left: 400 }}>
+                <Col span={2} style={{ position: 'absolute', top: -13, left: 400 }}>
                   <Button onClick={() => this.searchAllData()}>搜索</Button>
                 </Col>
               </Col>
