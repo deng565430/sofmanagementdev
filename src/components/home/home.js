@@ -63,6 +63,9 @@ class Home extends React.Component {
     value: 1,
     // 搜索标签 string
     label: null,
+    // 搜索评分
+    rate: '',
+    rateShow: true,
     // start 分页
     start: 0,
     // length 分页长度
@@ -114,6 +117,27 @@ class Home extends React.Component {
     });
   }
 
+  cancel(e) {
+    e.target.blur()
+    this.setState({ rate: '', Show: false })
+    setTimeout(() => {
+      this.setState({ rateShow: true })
+    }, 0)
+  }
+
+  //搜索：选择评分等级
+  changeRate(e) {
+    this.setState({
+      rate: e.target.value
+    })
+    if (e.target.value == '') {
+      this.setState({ rateShow: false })
+      setTimeout(() => {
+        this.setState({ rateShow: true })
+      }, 0)
+    }
+  }
+
   // 搜索所有数据
   searchAllData() {
     const label = this.state.label ? this.state.label.join(",") : null;
@@ -126,6 +150,19 @@ class Home extends React.Component {
       sign: this.props.urlPath,
       order: this.state.order
     };
+    //搜索条件里是否有客户分级
+    this.state.rate
+      ? Object.assign(data, {
+        rate: this.state.rate
+      })
+      : false
+    //所搜条件是否为全部，是的话参数不传天和已联系未联系
+    this.state.value == 'all'
+      ? data.day = data.contact = null
+      : false
+
+
+      console.log(data)
     this.props.getTable(data);
   }
   // 搜索电话号码
@@ -140,7 +177,7 @@ class Home extends React.Component {
     };
     this.props.getTable(dataList, true);
   }
-  closeSearch(){
+  closeSearch() {
     this.props.getTable(null, false, true)
   }
   // 筛选条件
@@ -165,7 +202,7 @@ class Home extends React.Component {
     // tags = tags.join(',')
     this.setState({
       label: tags
-    });
+    })
   }
 
   // 从业状态
@@ -339,11 +376,11 @@ class Home extends React.Component {
               </Col>
             </Row>
           ) : (
-            <Row>
-              <Col span={1} />
-              <Col span={23}>正在获取...</Col>
-            </Row>
-          )}
+              <Row>
+                <Col span={1} />
+                <Col span={23}>正在获取...</Col>
+              </Row>
+            )}
 
           <Col span={24} style={{ padding: "5px 0" }}>
             <Row>
@@ -355,23 +392,52 @@ class Home extends React.Component {
               </Col>
             </Row>
             <Row>
+              <Col>
+                <div style={{ paddingTop: 10, paddingBottom: 10, width: 350, position: 'absolute', top: -50, left: 580 }}>
+                  <Col span={6} className="font-color">
+                    客户分级：
+                  </Col>
+                  {
+                    this.state.rateShow ?
+                      <RadioGroup value={this.state.rate} onChange={(e) => this.changeRate(e)}>
+                        <RadioButton value="A">A</RadioButton>
+                        <RadioButton value="B">B</RadioButton>
+                        <RadioButton value="C">C</RadioButton>
+                        <RadioButton value="D">D</RadioButton>
+                        <Button icon='close' style={{ marginLeft: 10 }} onClick={(e) => this.cancel(e)}></Button>
+                      </RadioGroup>
+                      : null
+                  }
+                </div>
+              </Col>
+            </Row>
+            <Row>
               <Col span={2} className="font-color">
                 联系时间：
               </Col>
               <Col span={21}>
-                <Col span={1}>最近</Col>
-                <Col span={2}>
-                  <InputNumber
-                    style={{ width: "70px" }}
-                    min={1}
-                    max={30}
-                    size={5}
-                    value={this.state.day}
-                    onChange={val => this.onChange(val)}
-                  />{" "}
-                </Col>
-                <Col span={1}> 天</Col>
-                <Col span={5}>
+                {
+                  this.state.value == 'all'
+                    ?
+                    <Col span={2}>
+                      全部
+              </Col>
+                    : <div>
+                      <Col span={1}>最近</Col>
+                      <Col span={2}>
+                        <InputNumber
+                          style={{ width: "70px" }}
+                          min={0}
+                          max={30}
+                          size={5}
+                          value={this.state.day}
+                          onChange={val => this.onChange(val)}
+                        />{" "}
+                      </Col>
+                      <Col span={1}> 天</Col>
+                    </div>
+                }
+                <Col span={7}>
                   <RadioGroup
                     onChange={e =>
                       this.setState({
@@ -382,9 +448,10 @@ class Home extends React.Component {
                   >
                     <Radio value={1}>未联系</Radio>
                     <Radio value={0}>已联系</Radio>
+                    <Radio value={'all'}>全部</Radio>
                   </RadioGroup>
                 </Col>
-                <Col span={2}>
+                <Col span={2} style={{ position: 'absolute', top: -20, left: 400 }}>
                   <Button onClick={() => this.searchAllData()}>搜索</Button>
                 </Col>
               </Col>
@@ -499,13 +566,13 @@ class Home extends React.Component {
                 <Col span={21} className="font-size">
                   {clientInfo.projectCount
                     ? clientInfo.projectCount.map(
-                        v =>
-                          v !== null && (
-                            <span key={v} style={{ marginRight: 10 }}>
-                              {v}
-                            </span>
-                          )
-                      )
+                      v =>
+                        v !== null && (
+                          <span key={v} style={{ marginRight: 10 }}>
+                            {v}
+                          </span>
+                        )
+                    )
                     : null}
                 </Col>
               </Row>
@@ -516,13 +583,13 @@ class Home extends React.Component {
                 <Col span={21} className="font-size">
                   {clientInfo.recentProject
                     ? clientInfo.recentProject.map(
-                        v =>
-                          v !== null && (
-                            <span key={v} style={{ marginRight: 10 }}>
-                              {v}
-                            </span>
-                          )
-                      )
+                      v =>
+                        v !== null && (
+                          <span key={v} style={{ marginRight: 10 }}>
+                            {v}
+                          </span>
+                        )
+                    )
                     : null}
                 </Col>
               </Row>
@@ -533,12 +600,12 @@ class Home extends React.Component {
                 <Col span={21} className="font-size">
                   {clientInfo.area
                     ? clientInfo.area.split(",").map(v => {
-                        return (
-                          <span key={v} style={{ marginRight: 10 }}>
-                            {v}
-                          </span>
-                        );
-                      })
+                      return (
+                        <span key={v} style={{ marginRight: 10 }}>
+                          {v}
+                        </span>
+                      );
+                    })
                     : null}
                 </Col>
               </Row>
@@ -556,13 +623,13 @@ class Home extends React.Component {
                 </Col>
                 <Col span={21}>
                   {clientInfo.practiceStatuses &&
-                  clientInfo.practiceStatuses.length > 0 ? (
-                    <CheckboxGroup
-                      options={clientInfo.practiceStatuses}
-                      value={clientInfo.checkOptionsDefaultValue}
-                      onChange={this.selectPractice.bind(this)}
-                    />
-                  ) : null}
+                    clientInfo.practiceStatuses.length > 0 ? (
+                      <CheckboxGroup
+                        options={clientInfo.practiceStatuses}
+                        value={clientInfo.checkOptionsDefaultValue}
+                        onChange={this.selectPractice.bind(this)}
+                      />
+                    ) : null}
                 </Col>
               </Row>
               <Row>
@@ -642,8 +709,8 @@ class Home extends React.Component {
                           ({clientInfo.managerTime})
                         </span>
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                       {clientInfo.store === "店员" ? (
                         <Popconfirm
                           onConfirm={e => this.onConfirm(e)}
@@ -654,8 +721,8 @@ class Home extends React.Component {
                           <Button size="small">提升</Button>
                         </Popconfirm>
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </Col>
                   </Row>
                   <div style={{ paddingTop: 10 }}>
@@ -668,21 +735,21 @@ class Home extends React.Component {
                     >
                       {clientInfo.score
                         ? clientInfo.score.map(v => {
-                            return (
-                              <Tooltip
-                                key={v.key}
-                                placement="topLeft"
-                                title={v.msg}
+                          return (
+                            <Tooltip
+                              key={v.key}
+                              placement="topLeft"
+                              title={v.msg}
+                            >
+                              <RadioButton
+                                className="radio-style-lable"
+                                value={v.key}
                               >
-                                <RadioButton
-                                  className="radio-style-lable"
-                                  value={v.key}
-                                >
-                                  {v.key}
-                                </RadioButton>
-                              </Tooltip>
-                            );
-                          })
+                                {v.key}
+                              </RadioButton>
+                            </Tooltip>
+                          );
+                        })
                         : ""}
                     </RadioGroup>
                   </div>

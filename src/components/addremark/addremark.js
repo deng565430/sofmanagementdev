@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tag, Input, Icon } from 'antd';
+import { Tag, Input, Icon, message } from 'antd';
 
 export default class EditableTagGroup extends React.Component {
   constructor(props) {
@@ -38,6 +38,13 @@ export default class EditableTagGroup extends React.Component {
     if (inputValue && tags.indexOf(inputValue) === -1) {
       tags = [...tags, inputValue];
     }
+    if (this.state.name == '手机备注' && this.state.inputValue) {
+      let reg = /^[1][3,4,5,7,8][0-9]{9}$/;
+      if (!reg.test(this.state.inputValue)) {
+        message.error('无效的手机号码！');
+        tags = []
+      }
+    }
     this.props.remarkFunc(tags)
     this.setState({
       tags,
@@ -53,33 +60,33 @@ export default class EditableTagGroup extends React.Component {
     return (
       <div>
         {
-          tags.length > 0 ? <Tag  color="#f50" closable afterClose={() => this.handleClose(tags[0])}>
+          tags.length > 0 ? <Tag color="#f50" closable afterClose={() => this.handleClose(tags[0])}>
             {tags[0]}
           </Tag> : null
         }
         {
           tags.length === 0
-          ? <div>
-            {
-              inputVisible
-              ? <Input
-                  ref={this.saveInputRef}
-                  type="text"
-                  size="small"
-                  style={{ width: 78 }}
-                  value={inputValue}
-                  onChange={this.handleInputChange}
-                  onBlur={this.handleInputConfirm}
-                   onPressEnter={this.handleInputConfirm}
-                />
-              : <Tag
-                  onClick={this.showInput}
-                  style={{ background: '#fff', borderStyle: 'dashed' }}
-                >
-                  <Icon type="plus" />{this.state.name}
-                </Tag>
-            }
-          </div>  : null
+            ? <div>
+              {
+                inputVisible
+                  ? <Input
+                    ref={this.saveInputRef}
+                    type="text"
+                    size="small"
+                    style={{ width: 78 }}
+                    value={inputValue}
+                    onChange={this.handleInputChange}
+                    onBlur={this.handleInputConfirm}
+                    onPressEnter={this.handleInputConfirm}
+                  />
+                  : <Tag
+                    onClick={this.showInput}
+                    style={{ background: '#fff', borderStyle: 'dashed' }}
+                  >
+                    <Icon type="plus" />{this.state.name}
+                  </Tag>
+              }
+            </div> : null
         }
       </div>
     );

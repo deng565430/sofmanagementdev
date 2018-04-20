@@ -123,7 +123,8 @@ export function getTable(data, isSearch, flag) {
       order: historyData.order || 0,
       start: 0,
       length: 20,
-      sign: 'all'
+      sign: 'all',
+      contact: '1'
     }, { ...data })
     if (!isSearch) {
       historyData = data
