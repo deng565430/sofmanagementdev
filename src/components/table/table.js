@@ -7,9 +7,9 @@ import './table.css';
 
 @connect(
   state => state,
-  { getTable, showDataList, userContactList, selectTableList}
+  { getTable, showDataList, userContactList, selectTableList }
 )
-export default class Tables extends React.Component{
+export default class Tables extends React.Component {
   state = {
     columns: [{
       title: '注册名',
@@ -40,10 +40,10 @@ export default class Tables extends React.Component{
       key: 'msg',
       render: (text, record, index) => {
         return <Tooltip placement="topLeft" title={record.actionMsg}>
-            <span className="columns-row" onClick={() => this.clickUserName(record)}>
-              {text}
-            </span>
-          </Tooltip>;
+          <span className="columns-row" onClick={() => this.clickUserName(record)}>
+            {text}
+          </span>
+        </Tooltip>;
       },
     }]
   }
@@ -64,13 +64,13 @@ export default class Tables extends React.Component{
     }, 300)
   }
   // 选择分页获取表格数据
-  changePageGetData(page, pageSize){
-    const data = {
+  changePageGetData(page, pageSize) {
+    const data = Object.assign({}, this.props.prams, {
       start: page - 1,
       length: pageSize,
       sign: this.props.userdata.urlPath,
       order: this.props.order
-    }
+    })
     this.props.getTable(data)
   }
   render() {
@@ -84,20 +84,20 @@ export default class Tables extends React.Component{
       onChange: (page, pageSize) => this.changePageGetData(page, pageSize),
       size: 'small'
     }
-    return(
+    return (
       <div>
         <Table
-            rowClassName={(record) => {
-              return record.rowClassName
-            }}
-            dataSource={data}
-            indentSize={10}
-            pagination={paginationConfig}
-            scroll={{ x: 435, y: 600 }}
-            columns={this.state.columns}
-            size='small'
-          />
-    </div>
+          rowClassName={(record) => {
+            return record.rowClassName
+          }}
+          dataSource={data}
+          indentSize={10}
+          pagination={paginationConfig}
+          scroll={{ x: 435, y: 600 }}
+          columns={this.state.columns}
+          size='small'
+        />
+      </div>
     )
   }
 }

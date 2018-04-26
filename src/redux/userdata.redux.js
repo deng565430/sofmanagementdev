@@ -27,26 +27,26 @@ let historyData = {}
 export function userdata(state = initState, action) {
   switch (action.type) {
     case GETTABLEDATA:
-      return { ...state, ...action.payload}
+      return { ...state, ...action.payload }
     case GETUSERINFO:
       return { ...state, ...action.clientInfo }
     case GETCONTANCTLIST:
       return { ...state, ...action.contactList }
     case UPDATACLIENT:
       state.clientInfo[action.msg] = action.select
-      return { ...state}
+      return { ...state }
     case SELECTTABLEDATA:
       filterData(state.data, action)
       return { ...state, selectUserPhone: action.select }
     default:
-      return state  
+      return state
   }
 }
 
 function filterData(data, action) {
   return data.filter(item => {
     if (item.phone === action.select) {
-      item.rowClassName= 'background-name'
+      item.rowClassName = 'background-name'
       if (action.msg) {
         const msg = action.msg.length > 10 ? action.msg.substr(0, 8) + '...' : action.msg
         item.isSelect = true
@@ -113,6 +113,9 @@ export function updata(data, msg) {
 export function getTable(data, isSearch, flag) {
   message.destroy()
   message.loading('加载中', 0)
+  if (!isSearch) {
+    historyData = data
+  }
   if (flag) {
     data = historyData
   } else {
@@ -126,9 +129,6 @@ export function getTable(data, isSearch, flag) {
       sign: 'all',
       contact: '1'
     }, { ...data })
-    if (!isSearch) {
-      historyData = data
-    }
   }
   const urlPath = (data && data.sign) ? data.sign : 'all'
   const page = (data && data.start) ? data.start + 1 : 1
@@ -166,7 +166,7 @@ export function getTable(data, isSearch, flag) {
             getContact(contactData).then(contactRes => {
               message.destroy()
               const contactList = contactRes.data.data
-              dispatch(authSuccess({ data, recordsTotal,selectUserPhone, urlPath, page, clientInfo, contactList }))
+              dispatch(authSuccess({ data, recordsTotal, selectUserPhone, urlPath, page, clientInfo, contactList }))
             })
           }).catch(res => {
             console.log(res)
@@ -196,11 +196,11 @@ export function showDataList(phone) {
 // 获取用户聊天详情
 export function userContactList(phone, status = 1) {
   const data = {
-      phone,
-      status,
-      start: 0,
-      length: 100
-    }
+    phone,
+    status,
+    start: 0,
+    length: 100
+  }
   return dispatch => {
     getContact(data).then(res => {
       if (res.data.draw === 1) {

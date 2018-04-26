@@ -97,7 +97,8 @@ class Home extends React.Component {
     // 每日拨打详情
     getContactCount: {},
     // 选择评分等级
-    score: ""
+    score: "",
+    prams: {}
   };
 
   componentDidMount() {
@@ -160,9 +161,9 @@ class Home extends React.Component {
     this.state.value == 'all'
       ? data.day = data.contact = null
       : false
-
-
-      console.log(data)
+    this.setState({
+      prams: data
+    })
     this.props.getTable(data);
   }
   // 搜索电话号码
@@ -393,7 +394,7 @@ class Home extends React.Component {
             </Row>
             <Row>
               <Col>
-                <div style={{ paddingTop: 10, paddingBottom: 10, width: 350, position: 'absolute', top: -39, left: 580 }}>
+                <div style={{ paddingTop: 10, paddingBottom: 10, width: 350, position: 'absolute', top: -39, right: 100 }}>
                   <Col span={6} className="font-color">
                     客户分级：
                   </Col>
@@ -451,7 +452,7 @@ class Home extends React.Component {
                     <Radio value={'all'}>全部</Radio>
                   </RadioGroup>
                 </Col>
-                <Col span={2} style={{ position: 'absolute', top: -13, left: 400 }}>
+                <Col span={2} style={{ top: -15 }}>
                   <Button onClick={() => this.searchAllData()}>搜索</Button>
                 </Col>
               </Col>
@@ -489,7 +490,7 @@ class Home extends React.Component {
                   </Select>
                 </Col>
               </Row>
-              <Table order={this.state.order} />
+              <Table order={this.state.order} prams={this.state.prams} />
             </div>
             <div className="xianxia">
               <p>线下资料</p>
